@@ -1,0 +1,7 @@
+streamlit
+pandas
+pyspark
+SQLAlchemy
+python-bcrypt
+numpy
+scikit-learn
