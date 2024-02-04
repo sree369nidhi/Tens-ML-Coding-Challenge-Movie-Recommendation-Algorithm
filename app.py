@@ -18,11 +18,13 @@ from sqlalchemy.orm import sessionmaker
 import bcrypt
 
 
-password = "testpassword".encode('utf-8')
-hashed = bcrypt.hashpw(password, bcrypt.gensalt())
-result = bcrypt.checkpw(password, hashed)
 
-print("bcrypt is working:", result)  # Should print: bcrypt is working: True
+password = "samplepassword"
+salt = bcrypt.gensalt()
+hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
+
+print("Hashed password:", hashed)
+
 
 
 Base = declarative_base()
