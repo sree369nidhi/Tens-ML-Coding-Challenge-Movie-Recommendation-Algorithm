@@ -72,8 +72,17 @@ def registration_form():
             st.warning("Please enter both username and password")
 
 
+# def hash_password(password):
+#     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
 def hash_password(password):
-    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    print("Password type:", type(password))  # Should be <class 'str'>
+    password_bytes = password.encode('utf-8')
+    print("Password bytes type:", type(password_bytes))  # Should be <class 'bytes'>
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password_bytes, salt)
+    return hashed_password.decode('utf-8')
+
 
 def check_password(hashed_password, password):
     return bcrypt.checkpw(password.encode('utf-8'), hashed_password.encode('utf-8'))
