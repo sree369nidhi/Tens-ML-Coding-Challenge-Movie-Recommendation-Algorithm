@@ -18,15 +18,6 @@ from sqlalchemy.orm import sessionmaker
 import bcrypt
 
 
-
-password = "samplepassword"
-salt = bcrypt.gensalt()
-hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
-
-print("Hashed password:", hashed)
-
-
-
 Base = declarative_base()
 
 class User(Base):
@@ -80,33 +71,59 @@ def registration_form():
         else:
             st.warning("Please enter both username and password")
 
-
 # def hash_password(password):
 #     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
+# def check_password(hashed_password, password):
+#     return bcrypt.checkpw(password.encode('utf-8'), hashed_password.encode('utf-8'))
+
+# def check_login(db, username, password):
+#     user = db.query(User).filter(User.username == username).first()
+#     if user and check_password(user.password_hash, password):
+#         return True
+#     return False
+
+# def register_user(db, username, password):
+#     hashed_password = hash_password(password)
+#     new_user = User(username=username, password_hash=hashed_password)
+#     db.add(new_user)
+#     db.commit()
+
+import hashlib
+import os
+
+# Simplified hashing function using hashlib
 def hash_password(password):
-    print("Password type:", type(password))  # Should be <class 'str'>
-    password_bytes = password.encode('utf-8')
-    print("Password bytes type:", type(password_bytes))  # Should be <class 'bytes'>
-    salt = bcrypt.gensalt()
-    hashed_password = bcrypt.hashpw(password_bytes, salt)
-    return hashed_password.decode('utf-8')
+    # Generate a random salt
+    salt = os.urandom(32)  # Remember to store this
+    # Use SHA-256 (Consider more secure options like argon2-cffi)
+    hasher = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+    salt_hash_combo = salt + hasher  # Concatenate the salt and hash to store
+    return salt_hash_combo.hex()  # Convert to hex for storage
 
+# Function to check password
+def check_password(stored_password, provided_password):
+    # Extract salt from stored_password
+    salt = bytes.fromhex(stored_password[:64])  # Assuming you stored the hex
+    stored_hash = stored_password[64:]
+    # Hash the provided_password using the extracted salt
+    hasher = hashlib.pbkdf2_hmac('sha256', provided_password.encode('utf-8'), salt, 100000)
+    # Compare and return
+    return hasher.hex() == stored_hash
 
-def check_password(hashed_password, password):
-    return bcrypt.checkpw(password.encode('utf-8'), hashed_password.encode('utf-8'))
-
-def check_login(db, username, password):
-    user = db.query(User).filter(User.username == username).first()
-    if user and check_password(user.password_hash, password):
-        return True
-    return False
-
+# Function to register user
 def register_user(db, username, password):
     hashed_password = hash_password(password)
     new_user = User(username=username, password_hash=hashed_password)
     db.add(new_user)
     db.commit()
+
+# Function to check login
+def check_login(db, username, password):
+    user = db.query(User).filter(User.username == username).first()
+    if user and check_password(user.password_hash, password):
+        return True
+    return False
 
 
 # Main application
