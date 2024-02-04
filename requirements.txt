@@ -5,6 +5,4 @@ SQLAlchemy
 python-bcrypt
 numpy
 scikit-learn
-default-jre-headless
-default-jre
-default-jdk
+import-java
