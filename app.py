@@ -16,6 +16,7 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import bcrypt
+import hashlib
 
 
 Base = declarative_base()
@@ -70,27 +71,6 @@ def registration_form():
                 db.close()  # Close the session after use
         else:
             st.warning("Please enter both username and password")
-
-# def hash_password(password):
-#     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-
-# def check_password(hashed_password, password):
-#     return bcrypt.checkpw(password.encode('utf-8'), hashed_password.encode('utf-8'))
-
-# def check_login(db, username, password):
-#     user = db.query(User).filter(User.username == username).first()
-#     if user and check_password(user.password_hash, password):
-#         return True
-#     return False
-
-# def register_user(db, username, password):
-#     hashed_password = hash_password(password)
-#     new_user = User(username=username, password_hash=hashed_password)
-#     db.add(new_user)
-#     db.commit()
-
-import hashlib
-import os
 
 # Simplified hashing function using hashlib
 def hash_password(password):
