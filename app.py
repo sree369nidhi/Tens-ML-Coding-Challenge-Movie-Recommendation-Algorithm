@@ -75,8 +75,8 @@ def registration_form():
 # Simplified hashing function using hashlib
 def hash_password(password):
     # Generate a random salt
-    salt = os.urandom(32)  # Remember to store this
-    # Use SHA-256 (Consider more secure options like argon2-cffi)
+    salt = os.urandom(32)  
+    # Use SHA-256 
     hasher = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
     salt_hash_combo = salt + hasher  # Concatenate the salt and hash to store
     return salt_hash_combo.hex()  # Convert to hex for storage
@@ -84,7 +84,7 @@ def hash_password(password):
 # Function to check password
 def check_password(stored_password, provided_password):
     # Extract salt from stored_password
-    salt = bytes.fromhex(stored_password[:64])  # Assuming you stored the hex
+    salt = bytes.fromhex(stored_password[:64])  
     stored_hash = stored_password[64:]
     # Hash the provided_password using the extracted salt
     hasher = hashlib.pbkdf2_hmac('sha256', provided_password.encode('utf-8'), salt, 100000)
@@ -181,7 +181,7 @@ def main_app():
     # Streamlit App
     st.title("Movie Recommendation System")
 
-    # Sidebar navigation with an added 'About' page
+    # Sidebar navigation 
     page = st.sidebar.selectbox(
         "Navigate",
         [
@@ -385,7 +385,7 @@ def main_app():
         rmse = sqrt(mean_squared_error(pred_pandas['rating'], pred_pandas['ALS_predicted']))
         st.write(f"Root Mean Squared Error (RMSE) for the entire dataset: {rmse:.4f}")
         
-        # Additional statistics (you can add any other statistics you find relevant)
+        # Additional statistics 
         mean_absolute_error = np.mean(np.abs(pred_pandas['rating'] - pred_pandas['ALS_predicted']))
         st.write(f"Mean Absolute Error (MAE): {mean_absolute_error:.4f}")
 
@@ -412,7 +412,7 @@ def main_app():
 
 
 
-# Add a function to handle user logout
+# function to handle user logout
 def logout_user():
     if 'logged_in' in st.session_state:
         del st.session_state['logged_in']
@@ -420,7 +420,7 @@ def logout_user():
         del st.session_state['username']
     st.experimental_rerun()
 
-# Modify the conditional logic to check for user login state and display username and logout option if logged in
+# conditional logic to check for user login state and display username and logout option if logged in
 if 'logged_in' not in st.session_state or not st.session_state['logged_in']:
     activity = st.sidebar.selectbox("Activity", ["Login", "Register"])
     if activity == "Login":
