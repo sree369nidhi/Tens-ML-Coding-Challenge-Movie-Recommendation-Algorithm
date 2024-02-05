@@ -230,8 +230,8 @@ def main_app():
         """)
         
         # Display matrix image if exists
-        if os.path.exists('/path/to/matrix_image.png'):
-            st.image('/path/to/matrix_image.png', caption='User-Item Matrix')
+        if os.path.exists('matrix.png'):
+            st.image('matrix.png', caption='User-Item Matrix')
         else:
             st.write("Matrix image not found.")
         
